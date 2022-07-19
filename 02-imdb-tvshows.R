@@ -7,32 +7,36 @@ library(rvest)
 
 # read in http://www.imdb.com/chart/tvmeter ------------------------------------
 
-page <- read_html("___")
+page <- read_html('http://www.imdb.com/chart/tvmeter')
 
 # years ------------------------------------------------------------------------
 
 years <- page %>%
-  html_nodes("___") %>%
+  html_nodes("a+.secondaryInfo") %>%
   html_text() %>%
-  ___
-
+  str_remove("\\(") %>% 
+  str_remove("\\)") %>% 
+  as.numeric()
 # scores -----------------------------------------------------------------------
 
 scores <- page %>%
-  ___
+  html_nodes(".imdbRating") %>% 
+  html_text() %>% 
+  as.numeric()
 
 # names ------------------------------------------------------------------------
 
-names <- ___
+names <- page %>% 
+  html_nodes(".titleColumn a") %>% 
+  html_text()
 
 # tvshows dataframe ------------------------------------------------------------
 
 tvshows <- tibble(
   rank = 1:100,
-  ___,
-  ___,
-  ___,
-  ___
+  title = names,
+  year = years,
+  score = scores
 )
 
 # add new variables ------------------------------------------------------------
